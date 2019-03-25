@@ -1,0 +1,11 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+examples
+output
+sandbox
+LICENSE
+README
+.Rprofile
+.travis.yml
+tic.R
+appveyor.yml

@@ -1,0 +1,41 @@
+Package: oldtmaptools
+Type: Package
+Title: Old Thematic Map Tools
+Version: 1.0
+Authors@R: person("Martijn", "Tennekes", email = "mtennekes@gmail.com", role = c("aut", "cre"))
+Description: This package contains old (deprecated) functions from tmaptools. These functions are still based on sp.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Date: 2019-03-25
+Depends:
+    R (>= 3.0),
+    methods
+Imports:
+    sp,
+    sf (>= 0.6-0),
+    lwgeom (>= 0.1-4),
+    units (>= 0.5-1),
+    grid,
+    raster (>= 2.5-2),
+    rgdal,
+    rgeos,
+    classInt,
+    KernSmooth,
+    magrittr,
+    RColorBrewer,
+    viridisLite,
+    stats,
+    dichromat,
+    XML
+Suggests:
+    tmap (>= 2.0),
+    rmapshaper,
+    osmdata,
+    OpenStreetMap,
+    png,
+    shiny,
+    shinyjs
+URL: https://github.com/mtennekes/tmaptools_archive
+BugReports: https://github.com/mtennekes/tmaptools_archive/issues
+RoxygenNote: 6.1.1
