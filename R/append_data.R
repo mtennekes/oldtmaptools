@@ -1,4 +1,31 @@
+#' Append data to a shape object (deprecated)
+#'
+#' Data, in the format of a data.frame, is appended to a shape object. This is either done by a left join where keys are specified for both shape and data, or by fixed order. Under coverage (shape items that do not correspond to data records), over coverage (data records that do not correspond to shape items respectively) as well as the existence of duplicated key values are automatically checked and reported via console messages. With \code{under_coverage} and \code{over_coverage} the under and over coverage key values from the last \code{append_data} call can be retrieved. Tip: run \code{append_data} without assigning the result to check the coverage. Note that this function supports \code{sf} objects, but still uses sp-based methods (see details).
+#'
+#' This function supports \code{sf} objects, but still uses sp-based methods, from the packages sp, rgeos, and/or rgdal. Alternatively, the \code{\link[sf:tidyverse]{tidyverse}} method \code{left_join} can be used.
+#'
+#' @param shp shape object, which is one of
+#' \enumerate{
+#'  \item{\code{\link[sp:SpatialPolygonsDataFrame]{SpatialPolygons(DataFrame)}}}
+#'  \item{\code{\link[sp:SpatialPointsDataFrame]{SpatialPoints(DataFrame)}}}
+#'  \item{\code{\link[sp:SpatialLinesDataFrame]{SpatialLines(DataFrame)}}}
+#'  \item{\code{\link[sp:SpatialGridDataFrame]{SpatialGrid(DataFrame)}}}
+#'  \item{\code{\link[sp:SpatialPixelsDataFrame]{SpatialPixels(DataFrame)}}}
+#'  \item{\code{\link[sf:sf]{sf}} object that can be coerced as one above}
+#' }
+#' @param data data.frame
+#' @param key.shp variable name of \code{shp} map data to be matched with \code{key.data}. If not specified, and \code{fixed.order} is \code{FALSE}, the ID's of the polygons/lines/points are taken.
+#' @param key.data variable name of \code{data} to be matched with \code{key.shp}. If not specified, and \code{fixed.order} is \code{FALSE}, the row names of \code{data} are taken.
+#' @param ignore.duplicates should duplicated keys in \code{data} be ignored? (\code{FALSE} by default)
+#' @param ignore.na should NA values in \code{key.data} and \code{key.shp} be ignored? (\code{FALSE} by default)
+#' @param fixed.order should the data be append in the same order as the shapes in \code{shp}?
+#' @return Shape object with appended data. Tip: run \code{append_data} without assigning the result to check the coverage.
+#' @example ./examples/append_data.R
+#' @rdname append_data
+#' @export
 append_data <- function(shp, data, key.shp = NULL, key.data = NULL, ignore.duplicates=FALSE, ignore.na=FALSE, fixed.order=is.null(key.data) && is.null(key.shp)) {
+    .Deprecated("left_join", package = "dplyr", msg = "This function is deprecated and has been migrated to github.com/mtennekes/oldtmaptools")
+
     is_sf <- inherits(shp, c("sf", "sfc"))
     if (is_sf) shp <- as(shp, "Spatial")
 
@@ -121,8 +148,8 @@ append_data <- function(shp, data, key.shp = NULL, key.data = NULL, ignore.dupli
 				oc_res <- "No over coverage: each data record is appended to a shape feature."
 			}
 		}
-		assign(".underCoverage", list(result=uc_res, call=callAD, id=uc_id, value=shp@data[uc_id, key.shp]), envir = .OLDTMAPTOOLS_CACHE)
-		assign(".overCoverage", list(result=oc_res, call=callAD, id=data_ID[oc_id], value=data[oc_id, ][[key.data]]), envir = .OLDTMAPTOOLS_CACHE)
+		assign(".underCoverage", list(result=uc_res, call=callAD, id=uc_id, value=shp@data[uc_id, key.shp]), envir = .TMAPTOOLS_CACHE)
+		assign(".overCoverage", list(result=oc_res, call=callAD, id=data_ID[oc_id], value=data[oc_id, ][[key.data]]), envir = .TMAPTOOLS_CACHE)
 
 	}
 
@@ -149,8 +176,10 @@ append_data <- function(shp, data, key.shp = NULL, key.data = NULL, ignore.dupli
 	invisible(shp)
 }
 
+#' @rdname append_data
+#' @export
 under_coverage <- function() {
-	res <- get(".underCoverage", envir = .OLDTMAPTOOLS_CACHE)
+	res <- get(".underCoverage", envir = .TMAPTOOLS_CACHE)
 	if (is.null(res)) {
 		message("Function append_data not called yet.")
 		invisible()
@@ -160,8 +189,10 @@ under_coverage <- function() {
 	}
 }
 
+#' @export
+#' @rdname append_data
 over_coverage <- function() {
-	res <- get(".overCoverage", envir = .OLDTMAPTOOLS_CACHE)
+	res <- get(".overCoverage", envir = .TMAPTOOLS_CACHE)
 	if (is.null(res)) {
 		message("Function append_data not called yet.")
 		invisible()
